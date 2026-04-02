@@ -19,3 +19,9 @@ Instant gaming clip capture for Windows. Press a hotkey → get a shareable clip
 - **Electron** — cross-platform desktop shell
 - **ffmpeg** (gdigrab) — screen capture + clip export
 - **electron-store** — local settings & clip library
+
+
+---
+
+[Download Free Trial](https://github.com/yourname/rage-replay/releases)
+[Purchase License](https://whop.com/rage-replay/)
