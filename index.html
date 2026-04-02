@@ -1,85 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rage Replay - Instant Gameplay Recording</title>
-    <style>
-        body { 
-            background: #0a0a0a; 
-            color: #fff; 
-            font-family: 'Segoe UI', sans-serif;
-            text-align: center;
-            padding: 30px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .logo { 
-            max-width: 300px;
-            margin: 0 auto 20px;
-        }
-        .logo img {
-            width: 100%;
-            height: auto;
-        }
-        .btn { 
-            background: #ff2d2d; 
-            color: white; 
-            padding: 12px 25px; 
-            border: none; 
-            border-radius: 6px; 
-            font-size: 16px; 
-            cursor: pointer; 
-            margin: 10px; 
-            text-decoration: none;
-            display: inline-block;
-        }
-        .features { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 15px; 
-            margin: 30px 0; 
-        }
-        .feature { 
-            background: #111; 
-            padding: 15px; 
-            border-radius: 8px; 
-            font-size: 14px;
-        }
-        h1 {
-            font-size: 28px;
-            margin: 10px 0;
-        }
-        p {
-            color: #ccc;
-            margin-bottom: 25px;
-        }
-    </style>
-</head>
-<body>
-    <div class="logo">
-        <img src="assets/banner.png" alt="Rage Replay">
-    </div>
-    
-    <h1>Instant Gameplay Recording</h1>
-    <p>One hotkey. Zero lag. Perfect clips.</p>
-    
-    <div class="features">
-        <div class="feature">🎯 Custom hotkey</div>
-        <div class="feature">⚡ Zero performance impact</div>
-        <div class="feature">🚀 90s buffer</div>
-        <div class="feature">💾 Local saving</div>
-        <div class="feature">🎮 Any hardware</div>
-        <div class="feature">🔒 No watermark</div>
-    </div>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div style="margin: 25px 0;">
-        <a href="https://whop.com/rage-replay/" class="btn">GET FOR $15</a>
-        <a href="https://github.com/6bIgJIO/RR/releases" class="btn">FREE TRIAL</a>
-    </div>
-    
-    <p style="margin-top: 30px; color: #666; font-size: 12px;">
-        © 2026 Rage Replay | Windows 10/11
-    </p>
+<title>Rage Replay – Instant Gameplay Recording</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:Segoe UI, sans-serif;
+background:#070707;
+color:white;
+text-align:center;
+padding:60px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.logo img{
+width:420px;
+max-width:90%;
+margin-bottom:30px;
+filter:drop-shadow(0 0 20px rgba(255,80,0,.4));
+}
+
+h1{
+font-size:42px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#aaa;
+font-size:18px;
+margin-bottom:40px;
+}
+
+.features{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+margin:40px 0;
+}
+
+.feature{
+background:#101010;
+border-radius:10px;
+padding:18px;
+font-size:15px;
+transition:.25s;
+border:1px solid #1f1f1f;
+}
+
+.feature:hover{
+transform:translateY(-4px);
+background:#151515;
+border-color:#ff4d2d;
+}
+
+.buttons{
+margin-top:35px;
+}
+
+.btn{
+display:inline-block;
+padding:14px 32px;
+margin:10px;
+border-radius:8px;
+font-weight:600;
+text-decoration:none;
+transition:.25s;
+font-size:16px;
+}
+
+.buy{
+background:linear-gradient(45deg,#ff3b00,#ff6a00);
+color:white;
+box-shadow:0 0 20px rgba(255,80,0,.4);
+}
+
+.buy:hover{
+transform:translateY(-2px);
+box-shadow:0 0 35px rgba(255,80,0,.6);
+}
+
+.trial{
+background:#1a1a1a;
+color:#fff;
+border:1px solid #333;
+}
+
+.trial:hover{
+background:#222;
+transform:translateY(-2px);
+}
+
+.footer{
+margin-top:60px;
+color:#555;
+font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+<img src="assets/banner.png" alt="Rage Replay">
+</div>
+
+<h1>Instant Gameplay Recording</h1>
+<p class="subtitle">One hotkey. Zero lag. Perfect clips.</p>
+
+<div class="features">
+
+<div class="feature">🎯 Custom hotkey</div>
+
+<div class="feature">⚡ Zero performance impact</div>
+
+<div class="feature">🚀 90 second replay buffer</div>
+
+<div class="feature">💾 Local clip saving</div>
+
+<div class="feature">🎮 Works on any hardware</div>
+
+<div class="feature">🔒 No watermark</div>
+
+</div>
+
+<div class="buttons">
+
+<a class="btn buy" href="https://whop.com/rage-replay/">
+GET FOR $15
+</a>
+
+<a class="btn trial" href="https://github.com/6bIgJIO/RR/releases">
+FREE TRIAL
+</a>
+
+</div>
+
+<div class="footer">
+© 2026 Rage Replay • Windows 10 / 11
+</div>
+
+</div>
+
 </body>
 </html>
