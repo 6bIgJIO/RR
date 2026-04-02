@@ -23,5 +23,5 @@ Instant gaming clip capture for Windows. Press a hotkey → get a shareable clip
 
 ---
 
-[Download Free Trial](https://github.com/yourname/rage-replay/releases)
+[Download Free Trial](https://github.com/6bIgJIO/RR/releases)
 [Purchase License](https://whop.com/rage-replay/)
