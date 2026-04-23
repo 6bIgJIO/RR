@@ -31,6 +31,54 @@ padding:80px 20px;
 text-align:center;
 }
 
+/* DEMO BLOCK */
+.demo{
+margin:90px 0;
+}
+
+.demo-gif{
+width:100%;
+max-width:900px;
+margin:auto;
+border-radius:14px;
+overflow:hidden;
+border:1px solid #1f1f1f;
+box-shadow:0 0 40px rgba(255,60,0,.15);
+}
+
+.demo-gif img{
+width:100%;
+display:block;
+}
+
+.screens{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:20px;
+margin-top:30px;
+}
+
+.screen{
+width:220px;
+border-radius:12px;
+overflow:hidden;
+border:1px solid #1f1f1f;
+background:#0d0d0d;
+transition:.25s;
+}
+
+.screen img{
+width:100%;
+display:block;
+}
+
+.screen:hover{
+transform:translateY(-6px) scale(1.03);
+border-color:#ff3b00;
+box-shadow:0 0 25px rgba(255,60,0,.25);
+}
+  
 /* лого */
 .logo img{
 width:460px;
@@ -292,6 +340,30 @@ Gone — because you didn’t press a key.
 Rage Replay records it anyway.
 </p>
 </div>
+
+<div class="container demo">
+
+<div class="demo-gif">
+<img src="demo.gif" alt="Rage Replay demo">
+</div>
+
+<div class="screens">
+
+<div class="screen">
+<img src="screen1.png" alt="UI Home">
+</div>
+
+<div class="screen">
+<img src="screen2.png" alt="UI Clips">
+</div>
+
+<div class="screen">
+<img src="screen3.png" alt="UI Settings">
+</div>
+
+</div>
+
+</div>  
 
 <div class="how">
 <div class="step">
