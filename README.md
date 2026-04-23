@@ -8,6 +8,7 @@ Instant gaming clip capture for Windows. Press a hotkey → get a shareable clip
 
 - **Continuous buffer recording** — always recording in the background, 30–60fps
 - **One-key trigger** — F9 (or any key) saves the last N seconds + N seconds after
+- **Hands-free trigger** — Just shout or double clap into mic for getting clip
 - **1-click share** — TikTok, YouTube Shorts, Twitter, Discord
 - **Watermark** on free tier, removable with a license key
 - **Lives in the tray** — zero UI friction while gaming
@@ -17,7 +18,7 @@ Instant gaming clip capture for Windows. Press a hotkey → get a shareable clip
 ## Stack
 
 - **Electron** — cross-platform desktop shell
-- **ffmpeg** (gdigrab) — screen capture + clip export
+- **ffmpeg** (DXGI & gdigrab) — screen capture + clip export
 - **electron-store** — local settings & clip library
 
 
