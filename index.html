@@ -1,4 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- ==========================================================
+       BASIC SEO
+       ========================================================== -->
+  <title>Rage Replay – Automatic Game Clip Recorder</title>
+  <meta name="description"
+        content="Capture the last 15‑90 seconds of your gameplay automatically. Triggered by voice, double‑clap or a rage‑flick mouse movement. Zero FPS impact, GPU‑accelerated, Windows‑only. Free tier + Premium plans.">
+  <link rel="canonical" href="https://6bigjio.github.io/RR/">
+
+  <!-- ==========================================================
+       OPEN GRAPH – used by Facebook, LinkedIn, VK, Discord, etc.
+       ========================================================== -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://6bigjio.github.io/RR/">
+  <meta property="og:title"       content="Rage Replay – Automatic Game Clip Recorder">
+  <meta property="og:description" content="Record the last seconds of a rage moment without pressing a button. Voice‑shout, double‑clap, or mouse‑flick auto‑capture. Zero FPS impact, GPU‑accelerated.">
+  <meta property="og:image"       content="https://6bigjio.github.io/RR/og-image.png">
+  <meta property="og:image:alt"   content="Rage Replay UI showing a captured clip">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+
+  <!-- ==========================================================
+       TWITTER CARD – appears when the link is shared on Twitter
+       ========================================================== -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:site"        content="@RageReplay">
+  <meta name="twitter:title"       content="Rage Replay – Automatic Game Clip Recorder">
+  <meta name="twitter:description" content="Never miss a clutch or rage‑flick again. Automatic capture, GPU‑fast, free tier + premium.">
+  <meta name="twitter:image"       content="https://6bigjio.github.io/RR/og-image.png">
+
+  <!-- ==========================================================
+       FAVICON & APP ICONS (optional but recommended)
+       ========================================================== -->
+  <link rel="icon"         type="image/png" href="https://6bigjio.github.io/RR/favicon-32.png"   sizes="32x32">
+  <link rel="icon"         type="image/png" href="https://6bigjio.github.io/RR/favicon-16.png"   sizes="16x16">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://6bigjio.github.io/RR/apple-touch-icon-180x180.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="https://6bigjio.github.io/RR/apple-touch-icon-167x167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="https://6bigjio.github.io/RR/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="https://6bigjio.github.io/RR/apple-touch-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="https://6bigjio.github.io/RR/apple-touch-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="76x76"   href="https://6bigjio.github.io/RR/apple-touch-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="60x60"   href="https://6bigjio.github.io/RR/apple-touch-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="57x57"   href="https://6bigjio.github.io/RR/apple-touch-icon-57x57.png">
+
+  <!-- ==========================================================
+       STRUCTURED DATA – JSON‑LD (Google Rich Snippets)
+       ========================================================== -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Rage Replay",
+    "headline": "Automatic Game Clip Recorder",
+    "operatingSystem": "Windows",
+    "applicationCategory": "VideoGameApplication",
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "USD",
+        "url": "https://github.com/6bIgJIO/RR/releases",
+        "availability": "InStock",
+        "description": "Free tier – 15 s pre‑buffer, manual hot‑key trigger, GPU capture."
+      },
+      {
+        "@type": "Offer",
+        "price": "8.99",
+        "priceCurrency": "USD",
+        "url": "https://whop.com/rage-replay/",
+        "availability": "InStock",
+        "description": "Monthly Premium – 30 s pre‑buffer, all auto‑triggers, webcam PiP, watermark‑free."
+      },
+      {
+        "@type": "Offer",
+        "price": "39.99",
+        "priceCurrency": "USD",
+        "url": "https://whop.com/rage-replay/",
+        "availability": "InStock",
+        "description": "Yearly Premium – 90 s pre‑buffer, all auto‑triggers, webcam PiP, priority support."
+      },
+      {
+        "@type": "Offer",
+        "price": "59.99",
+        "priceCurrency": "USD",
+        "url": "https://whop.com/rage-replay/",
+        "availability": "InStock",
+        "description": "Lifetime Premium – unlimited buffers, all features forever."
+      }
+    ],
+    "downloadUrl": "https://github.com/6bIgJIO/RR/releases",
+    "softwareVersion": "2026‑04",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "127"
+    }
+  }
+  </script>
+
+  <!-- ==========================================================
+       OPTIONAL: robots.txt & sitemap.xml (place these files in the
+       same folder as index.html on your web‑server)
+       ========================================================== -->
+  <!-- robots.txt (plain text file) -->
+  <!--
+  User-agent: *
+  Allow: /
+  Sitemap: https://rage-replay.com/sitemap.xml
+  -->
+
+  <!-- sitemap.xml (plain XML file) – only needed if you have many pages;
+       for a single‑page product site a simple one‑url sitemap is fine. -->
+  <!--
+  <?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+      <loc>https://rage-replay.com/</loc>
+      <lastmod>2026-04-24</lastmod>
+      <priority>1.0</priority>
+    </url>
+  </urlset>
+  -->
+</head>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
