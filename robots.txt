@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://6bigjio.github.io/RR/sitemap.xml
