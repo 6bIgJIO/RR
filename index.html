@@ -1,455 +1,438 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Rage Replay – Automatic Clip Capture</title>
-
-<link rel="icon" href="assets/icon.ico">
 
 <style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --rr-bg: #0a0a0c;
+    --rr-surface: #111116;
+    --rr-surface2: #18181f;
+    --rr-border: rgba(255,255,255,0.07);
+    --rr-border2: rgba(255,255,255,0.12);
+    --rr-red: #e8392a;
+    --rr-red-dim: rgba(232,57,42,0.15);
+    --rr-red-glow: rgba(232,57,42,0.08);
+    --rr-text: #f0eff2;
+    --rr-muted: #888;
+    --rr-accent: #ff5044;
+  }
+  body, html { background: var(--rr-bg); color: var(--rr-text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+  .lp { max-width: 960px; margin: 0 auto; padding: 0 24px; }
 
-body{
-font-family:Segoe UI, sans-serif;
-background:#050505;
-color:white;
-overflow-x:hidden;
-}
+  /* NAV */
+  nav { border-bottom: 1px solid var(--rr-border); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: rgba(10,10,12,0.92); backdrop-filter: blur(12px); z-index: 100; }
+  .nav-logo { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--rr-text); }
+  .nav-logo span { color: var(--rr-accent); }
+  .nav-links { display: flex; gap: 24px; align-items: center; }
+  .nav-links a { color: var(--rr-muted); font-size: 14px; text-decoration: none; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--rr-text); }
+  .nav-cta { background: var(--rr-red); color: #fff; padding: 8px 18px; border-radius: 6px; font-size: 14px; font-weight: 600; text-decoration: none; transition: opacity 0.15s; }
+  .nav-cta:hover { opacity: 0.85; color: #fff; }
 
-/* контейнер */
-.container{
-max-width:1100px;
-margin:auto;
-padding:80px 20px;
-text-align:center;
-}
+  /* HERO */
+  .hero { padding: 80px 0 60px; text-align: center; position: relative; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 8px; background: var(--rr-red-dim); border: 1px solid rgba(232,57,42,0.25); border-radius: 999px; padding: 5px 14px; font-size: 12px; font-weight: 600; color: var(--rr-accent); letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 28px; }
+  .hero-eyebrow-dot { width: 6px; height: 6px; background: var(--rr-accent); border-radius: 50%; animation: pulse 1.8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  h1 { font-size: clamp(38px, 6vw, 64px); font-weight: 800; letter-spacing: -1.5px; line-height: 1.06; margin-bottom: 20px; color: var(--rr-text); }
+  h1 em { font-style: normal; color: var(--rr-accent); }
+  .hero-sub { font-size: 18px; color: var(--rr-muted); max-width: 520px; margin: 0 auto 36px; line-height: 1.6; }
+  .hero-sub strong { color: var(--rr-text); font-weight: 500; }
+  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+  .btn-primary { background: var(--rr-red); color: #fff; padding: 13px 28px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; letter-spacing: 0.2px; transition: opacity 0.15s, transform 0.1s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); color: #fff; }
+  .btn-secondary { background: var(--rr-surface2); color: var(--rr-text); padding: 13px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; text-decoration: none; border: 1px solid var(--rr-border2); transition: border-color 0.15s, transform 0.1s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.25); transform: translateY(-1px); color: var(--rr-text); }
+  .hero-trust { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+  .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--rr-muted); }
+  .trust-check { width: 16px; height: 16px; background: rgba(40,200,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .trust-check svg { width: 9px; height: 9px; stroke: #28c878; stroke-width: 2.5; fill: none; }
 
-/* DEMO BLOCK */
-.demo{
-margin:90px 0;
-}
+  /* VIDEO */
+  .video-section { padding: 0 0 60px; }
+  .video-wrap { border-radius: 12px; overflow: hidden; border: 1px solid var(--rr-border2); position: relative; background: var(--rr-surface); aspect-ratio: 16/9; }
+  .video-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .video-label { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.7); border: 1px solid var(--rr-border2); border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 600; color: var(--rr-accent); text-transform: uppercase; letter-spacing: 0.5px; }
 
-.demo-gif{
-width:100%;
-max-width:900px;
-margin:auto;
-border-radius:14px;
-overflow:hidden;
-border:1px solid #1f1f1f;
-box-shadow:0 0 40px rgba(255,60,0,.15);
-}
+  /* HOW IT WORKS */
+  .section { padding: 64px 0; }
+  .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--rr-accent); margin-bottom: 12px; }
+  .section-title { font-size: clamp(26px, 4vw, 36px); font-weight: 800; letter-spacing: -0.8px; margin-bottom: 12px; }
+  .section-sub { font-size: 16px; color: var(--rr-muted); max-width: 480px; line-height: 1.6; margin-bottom: 48px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; border-radius: 12px; overflow: hidden; border: 1px solid var(--rr-border); }
+  .step { background: var(--rr-surface); padding: 28px 24px; position: relative; }
+  .step:not(:last-child) { border-right: 1px solid var(--rr-border); }
+  .step-num { font-size: 11px; font-weight: 700; color: var(--rr-accent); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; opacity: 0.7; }
+  .step-icon { width: 40px; height: 40px; background: var(--rr-red-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .step-icon svg { width: 20px; height: 20px; stroke: var(--rr-accent); stroke-width: 1.8; fill: none; }
+  .step h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.2px; }
+  .step p { font-size: 14px; color: var(--rr-muted); line-height: 1.6; }
 
-.demo-gif video{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+  /* TRIGGERS */
+  .triggers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 0; }
+  .trigger-card { background: var(--rr-surface); border: 1px solid var(--rr-border); border-radius: 10px; padding: 20px; transition: border-color 0.15s; }
+  .trigger-card:hover { border-color: rgba(232,57,42,0.3); }
+  .trig-icon { width: 36px; height: 36px; background: var(--rr-red-dim); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .trig-icon svg { width: 18px; height: 18px; stroke: var(--rr-accent); stroke-width: 2; fill: none; }
+  .trigger-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .trigger-card p { font-size: 13px; color: var(--rr-muted); line-height: 1.5; }
 
-.demo-gif img{
-width:100%;
-display:block;
-}
+  /* FEATURES */
+  .features-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .feat { background: var(--rr-surface); border: 1px solid var(--rr-border); border-radius: 10px; padding: 22px; display: flex; gap: 16px; align-items: flex-start; transition: border-color 0.15s; }
+  .feat:hover { border-color: var(--rr-border2); }
+  .feat-dot { width: 8px; height: 8px; background: var(--rr-accent); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .feat-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .feat-text p { font-size: 13px; color: var(--rr-muted); line-height: 1.5; }
 
-.screens{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:20px;
-margin-top:30px;
-}
+  /* SCREENSHOTS */
+  .screenshots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .screenshot { border-radius: 8px; overflow: hidden; border: 1px solid var(--rr-border); aspect-ratio: 16/10; background: var(--rr-surface); }
+  .screenshot img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-.screen{
-width:220px;
-border-radius:12px;
-overflow:hidden;
-border:1px solid #1f1f1f;
-background:#0d0d0d;
-transition:.25s;
-}
+  /* PRIVACY */
+  .privacy-block { background: var(--rr-surface); border: 1px solid var(--rr-border); border-left: 3px solid var(--rr-accent); border-radius: 0 10px 10px 0; padding: 24px 28px; display: flex; gap: 20px; align-items: flex-start; }
+  .privacy-icon { width: 40px; height: 40px; background: var(--rr-red-dim); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .privacy-icon svg { width: 20px; height: 20px; stroke: var(--rr-accent); stroke-width: 1.8; fill: none; }
+  .privacy-text h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .privacy-text p { font-size: 14px; color: var(--rr-muted); line-height: 1.6; }
+  .privacy-text p strong { color: var(--rr-text); font-weight: 600; }
 
-.screen img{
-width:100%;
-display:block;
-}
+  /* PRICING */
+  .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .plan { background: var(--rr-surface); border: 1px solid var(--rr-border); border-radius: 10px; padding: 22px 18px; position: relative; }
+  .plan.featured { border-color: var(--rr-accent); }
+  .plan-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--rr-red); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; white-space: nowrap; }
+  .plan-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--rr-muted); margin-bottom: 14px; }
+  .plan-price { font-size: 28px; font-weight: 800; letter-spacing: -1px; margin-bottom: 4px; }
+  .plan-price sup { font-size: 14px; font-weight: 600; vertical-align: super; letter-spacing: 0; }
+  .plan-period { font-size: 12px; color: var(--rr-muted); margin-bottom: 18px; }
+  .plan-features { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .plan-features li { font-size: 13px; color: var(--rr-muted); display: flex; gap: 8px; align-items: flex-start; }
+  .plan-features li.on { color: var(--rr-text); }
+  .plan-features li::before { content: ''; width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 1px; }
+  .plan-features li.on::before { background: rgba(40,200,120,0.2); box-shadow: inset 0 0 0 1.5px #28c878; }
+  .plan-features li.off::before { background: var(--rr-surface2); box-shadow: inset 0 0 0 1.5px var(--rr-border2); }
+  .plan-btn { display: block; text-align: center; padding: 10px; border-radius: 7px; font-size: 13px; font-weight: 700; text-decoration: none; transition: opacity 0.15s; }
+  .plan-btn.outline { border: 1px solid var(--rr-border2); color: var(--rr-text); }
+  .plan-btn.outline:hover { border-color: rgba(255,255,255,0.25); color: var(--rr-text); }
+  .plan-btn.solid { background: var(--rr-red); color: #fff; }
+  .plan-btn.solid:hover { opacity: 0.85; color: #fff; }
 
-.screen:hover{
-transform:translateY(-6px) scale(1.03);
-border-color:#ff3b00;
-box-shadow:0 0 25px rgba(255,60,0,.25);
-}
-  
-/* лого */
-.logo img{
-width:460px;
-max-width:95%;
-margin-bottom:30px;
-filter:drop-shadow(0 0 40px rgba(255,60,0,.5));
-}
+  /* DIVIDER */
+  .section-divider { border: none; border-top: 1px solid var(--rr-border); margin: 0; }
 
-/* заголовки */
-h1{
-font-size:56px;
-font-weight:800;
-letter-spacing:1px;
-margin-bottom:10px;
-}
+  /* FOOTER */
+  footer { padding: 32px 24px; border-top: 1px solid var(--rr-border); display: flex; align-items: center; justify-content: space-between; max-width: 960px; margin: 0 auto; }
+  .footer-logo { font-size: 15px; font-weight: 700; }
+  .footer-logo span { color: var(--rr-accent); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 13px; color: var(--rr-muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--rr-text); }
+  .footer-copy { font-size: 12px; color: var(--rr-muted); }
 
-.subtitle{
-font-size:20px;
-color:#bbb;
-margin-bottom:20px;
-}
-
-.tagline{
-font-size:15px;
-color:#777;
-margin-bottom:50px;
-}
-
-/* HERO glow */
-.hero{
-position:relative;
-}
-
-.hero::before{
-content:"";
-position:absolute;
-top:-200px;
-left:50%;
-transform:translateX(-50%);
-width:800px;
-height:800px;
-background:radial-gradient(circle,rgba(255,60,0,.25),transparent 70%);
-z-index:-1;
-filter:blur(80px);
-}
-
-/* кнопки */
-.buttons{
-margin-top:30px;
-}
-
-.btn{
-display:inline-block;
-padding:16px 36px;
-margin:10px;
-border-radius:10px;
-font-weight:700;
-text-decoration:none;
-transition:.25s;
-font-size:17px;
-}
-
-.buy{
-background:linear-gradient(45deg,#ff2d00,#ff7a00);
-color:white;
-box-shadow:0 0 25px rgba(255,80,0,.5);
-}
-
-.buy:hover{
-transform:translateY(-3px) scale(1.03);
-box-shadow:0 0 50px rgba(255,80,0,.8);
-}
-
-.trial{
-background:#111;
-border:1px solid #333;
-}
-
-.trial:hover{
-background:#1a1a1a;
-transform:translateY(-2px);
-}
-
-/* FEATURES */
-.features{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:22px;
-margin:70px 0;
-}
-
-.feature{
-background:#0d0d0d;
-border-radius:14px;
-padding:22px;
-font-size:15px;
-border:1px solid #1f1f1f;
-transition:.25s;
-position:relative;
-overflow:hidden;
-}
-
-.feature::after{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(120deg,transparent,rgba(255,60,0,.15),transparent);
-opacity:0;
-transition:.3s;
-}
-
-.feature:hover{
-transform:translateY(-6px) scale(1.02);
-border-color:#ff3b00;
-}
-
-.feature:hover::after{
-opacity:1;
-}
-
-/* emotion block */
-.block{
-margin:90px 0;
-}
-
-.block h2{
-font-size:32px;
-margin-bottom:20px;
-}
-
-.block p{
-color:#aaa;
-line-height:1.6;
-}
-
-/* HOW */
-.how{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:30px;
-margin-top:50px;
-}
-
-.step{
-width:260px;
-background:#0d0d0d;
-padding:20px;
-border-radius:12px;
-border:1px solid #222;
-}
-
-.step span{
-font-size:12px;
-color:#ff3b00;
-letter-spacing:2px;
-}
-
-.step h3{
-margin:10px 0;
-}
-
-/* PRICING */
-.pricing{
-margin-top:80px;
-}
-
-.plans{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:20px;
-margin-top:30px;
-}
-
-.plan{
-background:#0d0d0d;
-border:1px solid #222;
-border-radius:14px;
-padding:25px;
-width:230px;
-transition:.25s;
-}
-
-.plan:hover{
-transform:translateY(-6px);
-border-color:#ff3b00;
-}
-
-.plan h4{
-margin-bottom:10px;
-}
-
-.plan span{
-font-size:26px;
-font-weight:700;
-color:#ff5a2d;
-}
-
-.recommended{
-border:2px solid #ff3b00;
-box-shadow:0 0 30px rgba(255,60,0,.4);
-}
-
-/* финал */
-.final{
-margin-top:100px;
-}
-
-.final h2{
-font-size:34px;
-margin-bottom:20px;
-}
-
-.footer{
-margin-top:60px;
-color:#555;
-font-size:13px;
-}
-
+  @media (max-width: 640px) {
+    .steps, .triggers, .pricing-grid { grid-template-columns: 1fr; }
+    .step:not(:last-child) { border-right: none; border-bottom: 1px solid var(--rr-border); }
+    .features-grid { grid-template-columns: 1fr; }
+    .screenshots { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
 </style>
-</head>
 
-<body>
+<nav>
+  <div class="nav-logo">Rage<span>Replay</span></div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://github.com/6bIgJIO/RR/releases">Changelog</a>
+    <a href="https://whop.com/rage-replay/" class="nav-cta">Get Premium</a>
+  </div>
+</nav>
 
-<div class="container hero">
+<div class="lp">
 
-<div class="logo">
-<img src="banner.png" alt="Rage Replay">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Auto-capture · No latency · Windows
+    </div>
+    <h1>Your rage moment.<br><em>Already saved.</em></h1>
+    <p class="hero-sub">
+      Rage Replay captures the last <strong>15–90 seconds</strong> of gameplay automatically —<br>
+      triggered by your voice, a clap, or a rage-flick. No buttons. No missed clips.
+    </p>
+    <div class="hero-btns">
+      <a href="https://whop.com/rage-replay/" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Get Premium — from $8.99
+      </a>
+      <a href="https://github.com/6bIgJIO/RR/releases" class="btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1.01.07 1.54 1.04 1.54 1.04.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.56 9.56 0 0112 6.8c.85.004 1.71.115 2.51.337 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10.02 10.02 0 0022 12c0-5.52-4.48-10-10-10z"/></svg>
+        Free Download
+      </a>
+    </div>
+    <div class="hero-trust">
+      <span class="trust-item">
+        <span class="trust-check"><svg viewBox="0 0 10 10"><polyline points="2,5 4,7.5 8,3"/></svg></span>
+        GPU capture · zero FPS impact
+      </span>
+      <span class="trust-item">
+        <span class="trust-check"><svg viewBox="0 0 10 10"><polyline points="2,5 4,7.5 8,3"/></svg></span>
+        Works with NVIDIA, AMD, Intel
+      </span>
+      <span class="trust-item">
+        <span class="trust-check"><svg viewBox="0 0 10 10"><polyline points="2,5 4,7.5 8,3"/></svg></span>
+        100% local · no account required
+      </span>
+    </div>
+  </section>
+
+  <!-- VIDEO -->
+  <section class="video-section">
+    <div class="video-wrap">
+      <video autoplay muted loop playsinline>
+        <source src="demo.mp4" type="video/mp4">
+      </video>
+      <span class="video-label">Live demo</span>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- HOW IT WORKS -->
+  <section class="section">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Three steps. Zero effort.</h2>
+    <p class="section-sub">Set it once and forget. Rage Replay handles the rest while you play.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        </div>
+        <h3>Launch &amp; play</h3>
+        <p>Rage Replay starts recording silently in the background. GPU-accelerated — your game doesn't feel it.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3>React naturally</h3>
+        <p>Shout, clap, or rage-flick your mouse. The app detects the moment and marks the timestamp.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </div>
+        <h3>Clip exported</h3>
+        <p>MP4 is saved to your drive instantly. Perfectly trimmed — the 15 seconds before the moment.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- TRIGGERS -->
+  <section class="section">
+    <p class="section-label">Auto triggers</p>
+    <h2 class="section-title">Your reactions are the button.</h2>
+    <p class="section-sub">Three detection modes — use one or all at once.</p>
+    <div class="triggers">
+      <div class="trigger-card">
+        <div class="trig-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 013 3v7a3 3 0 01-6 0V5a3 3 0 013-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v3M8 23h8"/></svg>
+        </div>
+        <h4>Voice shout</h4>
+        <p>Sustained yell above threshold triggers the clip. Tunable sensitivity — works even with headset mic.</p>
+      </div>
+      <div class="trigger-card">
+        <div class="trig-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 9l-6 3 6 3M15 9l6 3-6 3M12 3v6M12 15v6"/></svg>
+        </div>
+        <h4>Double clap</h4>
+        <p>Two sharp peaks within 600ms. Detects attack + silence + attack pattern to prevent false positives.</p>
+      </div>
+      <div class="trigger-card">
+        <div class="trig-icon">
+          <svg viewBox="0 0 24 24"><path d="M5 3l14 9-14 9V3z"/><path d="M19 12H5"/></svg>
+        </div>
+        <h4>Rage mouse</h4>
+        <p>Raw input delta over 50ms window. Detects the instinctive wrist-slam, not normal fast movement.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- FEATURES -->
+  <section id="features" class="section">
+    <p class="section-label">Features</p>
+    <h2 class="section-title">Everything a clip tool should be.</h2>
+    <p class="section-sub">Built for competitive players, streamers, and content creators.</p>
+    <div class="features-grid">
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text">
+          <h4>GPU-accelerated capture</h4>
+          <p>DXGI Desktop Duplication + NVENC/AMF/QSV. Falls back to GDI on older cards. Zero encoding overhead on your game.</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text">
+          <h4>Webcam overlay (PiP)</h4>
+          <p>Face-cam burned into the clip at export time — configurable position and size. Separate mic track with ducking.</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text">
+          <h4>Perfect A/V sync</h4>
+          <p>WASAPI loopback for system audio. aresample=async=1000 corrects drift across long sessions.</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text">
+          <h4>Rolling buffer up to 90s</h4>
+          <p>Premium records up to 90 seconds of pre-buffer. Never miss the setup before the moment.</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text">
+          <h4>Instant MP4 export</h4>
+          <p>Clips are trimmed from the buffer and re-encoded in seconds. faststart flag for instant streaming.</p>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-dot"></div>
+        <div class="feat-text">
+          <h4>Works on any game</h4>
+          <p>No game integration, no overlays, no APIs. Captures at the OS level — any game, any engine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS -->
+  <section class="section" style="padding-top:0">
+    <div class="screenshots">
+      <div class="screenshot"><img src="screen1.png" alt="Rage Replay main window" onerror="this.parentElement.style.background='#18181f'"/></div>
+      <div class="screenshot"><img src="screen2.png" alt="Rage Replay settings" onerror="this.parentElement.style.background='#18181f'"/></div>
+      <div class="screenshot"><img src="screen3.png" alt="Rage Replay clip export" onerror="this.parentElement.style.background='#18181f'"/></div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- PRIVACY -->
+  <section class="section">
+    <p class="section-label">Privacy</p>
+    <h2 class="section-title">Your clips stay on your PC. Always.</h2>
+    <p class="section-sub" style="margin-bottom:28px">While Medal.tv and Outplayed upload your footage to their servers, Rage Replay doesn't touch the internet.</p>
+    <div class="privacy-block">
+      <div class="privacy-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      </div>
+      <div class="privacy-text">
+        <h3>Zero data collection. No account. No cloud.</h3>
+        <p>Rage Replay is a <strong>local Windows app</strong>. It does not upload clips, screenshots, or gameplay data anywhere. Your mic and desktop are only accessed for recording — <strong>nothing leaves your machine</strong>. License validation is the only outbound request (a single key check on launch). No telemetry. No analytics. No background uploads.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- PRICING -->
+  <section id="pricing" class="section">
+    <p class="section-label">Pricing</p>
+    <h2 class="section-title">Start free. Upgrade when ready.</h2>
+    <p class="section-sub" style="margin-bottom:32px">Free tier lets you test the full capture pipeline before buying.</p>
+    <div class="pricing-grid">
+      <div class="plan">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0</div>
+        <div class="plan-period">forever</div>
+        <ul class="plan-features">
+          <li class="on">15s pre-buffer</li>
+          <li class="on">Manual trigger (hotkey)</li>
+          <li class="on">GPU capture</li>
+          <li class="off">Auto triggers</li>
+          <li class="off">Webcam PiP</li>
+          <li class="off">Watermark-free</li>
+        </ul>
+        <a href="https://github.com/6bIgJIO/RR/releases" class="plan-btn outline">Download free</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Monthly</div>
+        <div class="plan-price"><sup>$</sup>8.99</div>
+        <div class="plan-period">per month</div>
+        <ul class="plan-features">
+          <li class="on">30s pre-buffer</li>
+          <li class="on">All auto triggers</li>
+          <li class="on">GPU capture</li>
+          <li class="on">Webcam PiP</li>
+          <li class="on">Watermark-free</li>
+          <li class="off">Lifetime updates</li>
+        </ul>
+        <a href="https://whop.com/rage-replay/" class="plan-btn outline">Subscribe</a>
+      </div>
+      <div class="plan featured">
+        <div class="plan-badge">Best value</div>
+        <div class="plan-name">Yearly</div>
+        <div class="plan-price"><sup>$</sup>39.99</div>
+        <div class="plan-period">per year · save 63%</div>
+        <ul class="plan-features">
+          <li class="on">90s pre-buffer</li>
+          <li class="on">All auto triggers</li>
+          <li class="on">GPU capture</li>
+          <li class="on">Webcam PiP</li>
+          <li class="on">Watermark-free</li>
+          <li class="on">Priority support</li>
+        </ul>
+        <a href="https://whop.com/rage-replay/" class="plan-btn solid">Get yearly</a>
+      </div>
+      <div class="plan">
+        <div class="plan-name">Lifetime</div>
+        <div class="plan-price"><sup>$</sup>59.99</div>
+        <div class="plan-period">one-time · first 100 buyers</div>
+        <ul class="plan-features">
+          <li class="on">90s pre-buffer</li>
+          <li class="on">All auto triggers</li>
+          <li class="on">GPU capture</li>
+          <li class="on">Webcam PiP</li>
+          <li class="on">Watermark-free</li>
+          <li class="on">All future updates</li>
+        </ul>
+        <a href="https://whop.com/rage-replay/" class="plan-btn outline">Buy once</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="section" style="text-align:center; padding-bottom: 80px;">
+    <h2 style="font-size:clamp(26px,4vw,40px); font-weight:800; letter-spacing:-1px; margin-bottom:16px;">Stop watching it happen.<br>Start capturing it.</h2>
+    <p style="color:var(--rr-muted); font-size:16px; margin-bottom:32px; max-width:400px; margin-left:auto; margin-right:auto; line-height:1.6;">Every rage moment, every clutch, every flick — already saved by the time you realize what happened.</p>
+    <div class="hero-btns">
+      <a href="https://whop.com/rage-replay/" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Get Premium
+      </a>
+      <a href="https://github.com/6bIgJIO/RR/releases" class="btn-secondary">Free Download</a>
+    </div>
+  </section>
+
 </div>
 
-<h1>Your moments. Captured automatically.</h1>
-
-<p class="subtitle">
-No buttons. No missed clips. No desync.
-</p>
-
-<p class="tagline">
-Triggered by voice • clap • mouse movement
-</p>
-
-<div class="buttons">
-<a class="btn buy" href="https://whop.com/rage-replay/">GET PREMIUM</a>
-<a class="btn trial" href="https://github.com/6bIgJIO/RR/releases">DOWNLOAD FREE</a>
-</div>
-
-</div>
-
-<div class="container">
-
-<div class="block">
-<h2>You don’t react fast enough</h2>
-<p>
-That insane flick. That clutch. That rage moment.<br>
-Gone — because you didn’t press a key.
-</p>
-<br>
-<p style="color:#ff5a2d;">
-Rage Replay records it anyway.
-</p>
-</div>
-
-<div class="container demo">
-
-<div class="demo-gif">
-    <video autoplay loop muted playsinline>
-      <source src="demo.mp4" type="video/mp4">
-    </video>
-</div>
-
-<div class="screens">
-
-<div class="screen">
-<img src="screen1.png" alt="UI Home">
-</div>
-
-<div class="screen">
-<img src="screen2.png" alt="UI Clips">
-</div>
-
-<div class="screen">
-<img src="screen3.png" alt="UI Settings">
-</div>
-
-</div>
-
-</div>  
-
-<div class="how">
-<div class="step">
-<span>01</span>
-<h3>You play</h3>
-<p>No setup. No distractions.</p>
-</div>
-
-<div class="step">
-<span>02</span>
-<h3>You react</h3>
-<p>Shout. Clap. Move your mouse.</p>
-</div>
-
-<div class="step">
-<span>03</span>
-<h3>Clip saved</h3>
-<p>Last seconds already captured.</p>
-</div>
-</div>
-
-<div class="features">
-
-<div class="feature">🔥 Emotion-based auto triggers</div>
-<div class="feature">⚡ Zero FPS impact (GPU capture)</div>
-<div class="feature">🎯 Perfect audio/video sync</div>
-<div class="feature">📸 Webcam overlay (PiP)</div>
-<div class="feature">💾 Instant clip export</div> 
-<div class="feature">🖥  No cloud, no login</div>
-<div class="feature">🙂 Plug & play</div>
-<div class="feature">🎮 Works on any setup</div>
-
-</div>
-
-<div class="pricing">
-
-<h2>Unlock everything</h2>
-
-<div class="plans">
-
-<div class="plan">
-<h4>Free</h4>
-<span>$0</span>
-<p>Basic recording</p>
-</div>
-
-<div class="plan">
-<h4>Monthly</h4>
-<span>$8.99</span>
-<p>Full access</p>
-</div>
-
-<div class="plan recommended">
-<h4>Yearly</h4>
-<span>$39.99</span>
-<p>Best value</p>
-</div>
-
-<div class="plan">
-<h4>Lifetime</h4>
-<span>$59.99</span>
-<p>One-time purchase</p>
-</div>
-
-</div>
-
-</div>
-
-<div class="final">
-<h2>Stop missing your best moments</h2>
-<a class="btn buy" href="https://whop.com/rage-replay/">Download Rage Replay</a>
-</div>
-
-<div class="footer">
-© 2026 Rage Replay • Windows only
-</div>
-
-</div>
-
-</body>
-</html>
+<footer>
+  <div class="footer-logo">Rage<span>Replay</span></div>
+  <div class="footer-links">
+    <a href="https://github.com/6bIgJIO/RR">GitHub</a>
+    <a href="https://whop.com/rage-replay/">Whop</a>
+  </div>
+  <div class="footer-copy">© 2026 RageReplay · Windows only</div>
+</footer>
