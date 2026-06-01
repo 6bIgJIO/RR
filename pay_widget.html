@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buy Rage Replay</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── paste this widget anywhere via <script src="..."> or inline ── */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080808;--s:#101010;--b:#1e1e1e;
+  --t:#d8d8d8;--d:#585858;--acid:#c8ff00;
+  --f:'IBM Plex Mono',monospace;
+}
+body{background:var(--bg);color:var(--t);font-family:var(--f);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+.widget{width:100%;max-width:560px}
+
+/* ── STEP INDICATOR ── */
+.steps{display:flex;align-items:center;gap:0;margin-bottom:40px}
+.step{display:flex;align-items:center;gap:10px;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--d)}
+.step.active{color:var(--acid)}
+.step.done{color:var(--d)}
+.step-num{width:24px;height:24px;border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.step.active .step-num{border-color:var(--acid);color:var(--acid)}
+.step.done .step-num{background:var(--acid);color:#000;border-color:var(--acid)}
+.step-line{flex:1;height:1px;background:var(--b);margin:0 12px}
+
+/* ── PLAN CARDS ── */
+.plans{display:flex;flex-direction:column;gap:2px;margin-bottom:24px}
+.plan{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;background:var(--s);border:1px solid var(--b);
+  cursor:pointer;transition:all .2s;
+}
+.plan:hover{border-color:rgba(200,255,0,0.2)}
+.plan.selected{border-color:var(--acid);background:rgba(200,255,0,0.04)}
+.plan-name{font-size:14px;color:var(--t);font-weight:700}
+.plan-save{font-size:10px;color:var(--acid);letter-spacing:1px;margin-top:2px}
+.plan-price{font-size:22px;color:var(--acid);font-weight:700;text-align:right}
+.plan-price span{font-size:11px;color:var(--d);font-weight:400;display:block;margin-top:2px}
+
+/* ── FORM ── */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--d);margin-bottom:8px}
+.field input{
+  width:100%;background:var(--s);border:1px solid var(--b);
+  color:var(--t);padding:12px 16px;font-family:var(--f);font-size:13px;outline:none;
+  transition:border-color .2s;
+}
+.field input:focus{border-color:var(--acid)}
+.field input::placeholder{color:var(--d)}
+
+/* ── WALLET BOX ── */
+.wallet-box{
+  background:var(--s);border:1px solid var(--b);padding:24px;
+  margin-bottom:24px;
+}
+.wallet-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--d);margin-bottom:12px}
+.wallet-amount{font-size:28px;color:var(--acid);margin-bottom:16px;font-weight:700}
+.wallet-addr{
+  background:var(--bg);border:1px solid var(--b);padding:12px 16px;
+  font-size:12px;color:var(--t);word-break:break-all;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.copy-btn{
+  background:transparent;border:1px solid var(--b);color:var(--d);
+  padding:6px 12px;font-family:var(--f);font-size:10px;letter-spacing:1px;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s;
+}
+.copy-btn:hover{border-color:var(--acid);color:var(--acid)}
+.wallet-note{font-size:11px;color:var(--d);margin-top:12px;line-height:1.6}
+
+/* ── INVOICE ID ── */
+.invoice-id-box{
+  background:var(--bg);border:1px solid rgba(200,255,0,0.15);
+  padding:16px 20px;margin-bottom:24px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.invoice-id-label{font-size:10px;letter-spacing:2px;color:var(--d);text-transform:uppercase}
+.invoice-id-val{font-size:14px;color:var(--acid);letter-spacing:3px}
+
+/* ── TX SUBMIT ── */
+.tx-note{font-size:11px;color:var(--d);margin-bottom:20px;line-height:1.7}
+
+/* ── STATUS ── */
+.status-box{text-align:center;padding:48px 24px}
+.status-icon{font-size:48px;margin-bottom:24px}
+.status-title{font-size:20px;letter-spacing:3px;color:var(--acid);margin-bottom:16px}
+.status-text{font-size:12px;color:var(--d);line-height:1.8;max-width:400px;margin:0 auto}
+
+/* ── BUTTONS ── */
+.btn{
+  width:100%;padding:14px;font-family:var(--f);font-size:12px;
+  letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;
+  font-weight:700;transition:all .2s;
+}
+.btn-acid{background:var(--acid);color:#000}
+.btn-acid:hover{background:#fff}
+.btn-acid:disabled{background:var(--b);color:var(--d);cursor:not-allowed}
+.btn-ghost{background:transparent;border:1px solid var(--b);color:var(--d)}
+.btn-ghost:hover{border-color:var(--d);color:var(--t)}
+
+.error{font-size:11px;color:#ff4444;margin-top:8px;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="widget" id="widget">
+
+  <!-- STEP INDICATOR -->
+  <div class="steps">
+    <div class="step active" id="s1"><div class="step-num">1</div><span>Plan</span></div>
+    <div class="step-line"></div>
+    <div class="step" id="s2"><div class="step-num">2</div><span>Pay</span></div>
+    <div class="step-line"></div>
+    <div class="step" id="s3"><div class="step-num">3</div><span>Submit</span></div>
+    <div class="step-line"></div>
+    <div class="step" id="s4"><div class="step-num">4</div><span>Done</span></div>
+  </div>
+
+  <!-- SCREEN 1: Plan + Email -->
+  <div id="screen-1">
+    <div class="plans" id="plan-list"></div>
+    <div class="field">
+      <label>Your Email — key will be sent here</label>
+      <input type="email" id="email-input" placeholder="you@example.com">
+    </div>
+    <div class="error" id="err1"></div>
+    <button class="btn btn-acid" onclick="step1Next()">Continue →</button>
+  </div>
+
+  <!-- SCREEN 2: Payment details -->
+  <div id="screen-2" style="display:none">
+    <div class="invoice-id-box">
+      <span class="invoice-id-label">Invoice ID</span>
+      <span class="invoice-id-val" id="show-invoice-id">—</span>
+    </div>
+    <div class="wallet-box">
+      <div class="wallet-label">Send exactly this amount</div>
+      <div class="wallet-amount" id="show-amount">—</div>
+      <div class="wallet-label" style="margin-bottom:8px">To this TRC20 address</div>
+      <div class="wallet-addr">
+        <span id="show-wallet">—</span>
+        <button class="copy-btn" onclick="copyWallet()">COPY</button>
+      </div>
+      <div class="wallet-note">
+        Network: <strong>TRC20 (Tron)</strong> only. Send the exact amount — do not round.<br>
+        After sending, click "I've paid" below and paste your transaction hash.
+      </div>
+    </div>
+    <button class="btn btn-acid" onclick="goStep3()">I've paid →</button>
+  </div>
+
+  <!-- SCREEN 3: TX Hash -->
+  <div id="screen-3" style="display:none">
+    <div class="invoice-id-box">
+      <span class="invoice-id-label">Invoice ID</span>
+      <span class="invoice-id-val" id="show-invoice-id-3">—</span>
+    </div>
+    <p class="tx-note">
+      Find your transaction on <a href="https://tronscan.org" target="_blank" style="color:var(--acid)">tronscan.org</a>,
+      copy the TX Hash and paste it below. This lets us verify your payment.
+    </p>
+    <div class="field">
+      <label>Transaction Hash (TX Hash)</label>
+      <input type="text" id="tx-input" placeholder="Paste TX hash here...">
+    </div>
+    <div class="error" id="err3"></div>
+    <button class="btn btn-acid" onclick="submitTx()">Submit payment proof →</button>
+  </div>
+
+  <!-- SCREEN 4: Done -->
+  <div id="screen-4" style="display:none">
+    <div class="status-box">
+      <div class="status-icon">⏳</div>
+      <div class="status-title">PAYMENT RECEIVED</div>
+      <p class="status-text">
+        We've got your transaction hash and are verifying the payment.<br><br>
+        Your license key will be sent to <strong id="show-email-done" style="color:var(--t)">—</strong> 
+        once confirmed. Usually within a few hours.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── CONFIG ──
+const WORKER  = "https://6bigjio-payments.bydlopay.workers.dev";
+const PRODUCT = "RR";
+const PLANS = [
+  { id: "monthly",  name: "Monthly",  price: 8.99,  save: null },
+  { id: "yearly",   name: "Yearly",   price: 39.99, save: "Save 63% vs monthly" },
+  { id: "lifetime", name: "Lifetime", price: 59.99, save: "One-time, own it forever" },
+];
+
+// ── STATE ──
+let selectedPlan = PLANS[0].id;
+let invoiceId = "";
+let userEmail = "";
+
+// ── INIT ──
+(function init() {
+  const list = document.getElementById("plan-list");
+  PLANS.forEach(p => {
+    const el = document.createElement("div");
+    el.className = "plan" + (p.id === selectedPlan ? " selected" : "");
+    el.onclick = () => selectPlan(p.id);
+    el.id = "plan-" + p.id;
+    el.innerHTML = `
+      <div>
+        <div class="plan-name">${p.name}</div>
+        ${p.save ? `<div class="plan-save">${p.save}</div>` : ""}
+      </div>
+      <div class="plan-price">
+        $${p.price}
+        <span>${p.id === "lifetime" ? "one-time" : "/ " + p.id}</span>
+      </div>`;
+    list.appendChild(el);
+  });
+})();
+
+function selectPlan(id) {
+  selectedPlan = id;
+  document.querySelectorAll(".plan").forEach(el => el.classList.remove("selected"));
+  document.getElementById("plan-" + id).classList.add("selected");
+}
+
+async function step1Next() {
+  const email = document.getElementById("email-input").value.trim();
+  if (!email || !email.includes("@")) {
+    document.getElementById("err1").textContent = "Please enter a valid email.";
+    return;
+  }
+  userEmail = email;
+  document.getElementById("err1").textContent = "";
+
+  const btn = document.querySelector("#screen-1 .btn");
+  btn.disabled = true; btn.textContent = "Creating invoice...";
+
+  try {
+    const r = await fetch(WORKER + "/invoice/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ product_id: PRODUCT, plan: selectedPlan, email })
+    });
+    const data = await r.json();
+    if (!data.invoice_id) throw new Error(data.error || "Failed");
+
+    invoiceId = data.invoice_id;
+    document.getElementById("show-invoice-id").textContent = invoiceId;
+    document.getElementById("show-invoice-id-3").textContent = invoiceId;
+    document.getElementById("show-amount").textContent = "$" + data.amount + " USDT";
+    document.getElementById("show-wallet").textContent = data.wallet;
+
+    setStep(2);
+  } catch(e) {
+    document.getElementById("err1").textContent = e.message;
+    btn.disabled = false; btn.textContent = "Continue →";
+  }
+}
+
+function goStep3() { setStep(3); }
+
+async function submitTx() {
+  const txHash = document.getElementById("tx-input").value.trim();
+  if (!txHash || txHash.length < 20) {
+    document.getElementById("err3").textContent = "Please paste a valid transaction hash.";
+    return;
+  }
+
+  const btn = document.querySelector("#screen-3 .btn");
+  btn.disabled = true; btn.textContent = "Submitting...";
+
+  try {
+    const r = await fetch(WORKER + "/invoice/submit-tx", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ invoice_id: invoiceId, tx_hash: txHash })
+    });
+    const data = await r.json();
+    if (data.status !== "PENDING_REVIEW") throw new Error(data.error || "Failed");
+
+    document.getElementById("show-email-done").textContent = userEmail;
+    setStep(4);
+  } catch(e) {
+    document.getElementById("err3").textContent = e.message;
+    btn.disabled = false; btn.textContent = "Submit payment proof →";
+  }
+}
+
+function setStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById("screen-"+i).style.display = i === n ? "block" : "none";
+    const s = document.getElementById("s"+i);
+    s.className = "step" + (i < n ? " done" : i === n ? " active" : "");
+  }
+}
+
+function copyWallet() {
+  const addr = document.getElementById("show-wallet").textContent;
+  navigator.clipboard.writeText(addr).catch(() => {});
+  const btn = document.querySelector(".copy-btn");
+  btn.textContent = "COPIED ✓"; btn.style.color = "var(--acid)";
+  setTimeout(() => { btn.textContent = "COPY"; btn.style.color = ""; }, 2000);
+}
+</script>
+</body>
+</html>
