@@ -9,8 +9,8 @@
 /* ── paste this widget anywhere via <script src="..."> or inline ── */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#080808;--s:#101010;--b:#1e1e1e;
-  --t:#d8d8d8;--d:#585858;--acid:#c8ff00;
+  --bg:#0a0a0c;--s:#111116;--b:#1f1f26;
+  --t:#f0eff2;--d:#888;--acid:#ff5044;
   --f:'IBM Plex Mono',monospace;
 }
 body{background:var(--bg);color:var(--t);font-family:var(--f);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--f);min-height:100vh;d
   cursor:pointer;transition:all .2s;
 }
 .plan:hover{border-color:rgba(200,255,0,0.2)}
-.plan.selected{border-color:var(--acid);background:rgba(200,255,0,0.04)}
+.plan.selected{border-color:var(--acid);background:rgba(255,80,68,0.08)}
 .plan-name{font-size:14px;color:var(--t);font-weight:700}
 .plan-save{font-size:10px;color:var(--acid);letter-spacing:1px;margin-top:2px}
 .plan-price{font-size:22px;color:var(--acid);font-weight:700;text-align:right}
@@ -97,7 +97,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--f);min-height:100vh;d
   font-weight:700;transition:all .2s;
 }
 .btn-acid{background:var(--acid);color:#000}
-.btn-acid:hover{background:#fff}
+.btn-acid:hover{opacity:.85}
 .btn-acid:disabled{background:var(--b);color:var(--d);cursor:not-allowed}
 .btn-ghost{background:transparent;border:1px solid var(--b);color:var(--d)}
 .btn-ghost:hover{border-color:var(--d);color:var(--t)}
@@ -196,7 +196,16 @@ const PLANS = [
 ];
 
 // ── STATE ──
-let selectedPlan = PLANS[0].id;
+const params = new URLSearchParams(location.search);
+
+let selectedPlan =
+  params.get("plan") ||
+  PLANS[0].id;
+
+if (!PLANS.some(p => p.id === selectedPlan)) {
+  selectedPlan = PLANS[0].id;
+}
+
 let invoiceId = "";
 let userEmail = "";
 
