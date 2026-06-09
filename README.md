@@ -1,6 +1,14 @@
 # ⬡ Rage Replay
 
-Instant gaming clip capture for Windows. Press a hotkey → get a shareable clip. No BS.
+Looking for early adopters.
+
+First 20 users who provide feedback receive a free 30-day PRO license.
+Just send me a message on Reddit:
+https://www.reddit.com/user/6bigjio/
+
+Reaction-based gameplay clipping for Windows.
+
+Instead of relying solely on replay hotkeys, Rage Replay can save clips when you react — through voice spikes, double-clap detection, or manual triggers.
 
 ---
 
@@ -15,14 +23,5 @@ Instant gaming clip capture for Windows. Press a hotkey → get a shareable clip
 
 ---
 
-## Stack
-
-- **Electron** — cross-platform desktop shell
-- **ffmpeg** (DXGI & gdigrab) — screen capture + clip export
-- **electron-store** — local settings & clip library
-
-
----
-
 [Download Free Trial](https://github.com/6bIgJIO/RR/releases)
-[Purchase License](https://whop.com/rage-replay/)
+[Purchase License](https://6bigjio.github.io/RR/)
